@@ -48,6 +48,7 @@ function initMap(lat = currentLat, lng = currentLng) {
     });
 
     // ✅ เรียก `simulateMovement()` ให้เริ่มจำลองการเคลื่อนที่
+    trackLiveLocation();
     simulateMovement();
 }
 
@@ -112,6 +113,27 @@ function getLocation() {
     } else {
         alert("เบราว์เซอร์ของคุณไม่รองรับ Geolocation");
         initMap();
+    }
+}
+
+function trackLiveLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(
+            (position) => {
+                let lat = position.coords.latitude;
+                let lng = position.coords.longitude;
+
+                console.log("📍 ตำแหน่งปัจจุบัน:", lat, lng);
+                updateLatLng(lat, lng);
+            },
+            (error) => {
+                console.error("❌ ไม่สามารถดึงตำแหน่งได้:", error.message);
+                alert("เกิดข้อผิดพลาดในการดึงตำแหน่ง: " + error.message);
+            },
+            { enableHighAccuracy: true, maximumAge: 1000, timeout: 10000 }
+        );
+    } else {
+        alert("เบราว์เซอร์ของคุณไม่รองรับ Geolocation");
     }
 }
 
