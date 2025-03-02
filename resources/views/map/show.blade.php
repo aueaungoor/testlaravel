@@ -63,12 +63,14 @@
         }
     </style>
 </head>
-<body>
+<body> 
 
     <div class="container">
         <h2>🌍 Location Data</h2>
         <div>
             <a href="{{ route('map.index')}}" class="btn btn-success">Back to add more location</a>
+             <a href="{{ route('map.pagesall')}}" class="btn btn-success">See All Mark</a>
+             <a href="{{ route('map.realtime')}}" class="btn btn-success">Goodle Realtime</a>
         </div>
 
         <table class="table table-bordered">
@@ -79,6 +81,7 @@
                     <th>Last Name</th>
                     <th>Latitude</th>
                     <th>Longitude</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -89,7 +92,12 @@
                     <td>{{$cm->lname}}</td>
                     <td>{{$cm->lat}}</td>
                     <td>{{$cm->lng}}</td>
-                </tr>
+                    <td><a href="
+                        {{ route('map.select_mark' , ['lat' => $cm->lat , 'lng' => $cm->lng])}}"
+                         class="btn btn-primary">
+                         Show Route
+                         </a>
+                </tr>   
                 @endforeach
             </tbody>
         </table>

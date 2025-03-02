@@ -69,7 +69,18 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/map/show', [MapController::class, 'show'])->name('map.show');
 
-   
+    Route::get('/map/showall', [MapController::class, 'pagesall'])->name('map.pagesall');
+
+    Route::get('/map/getallmap', [MapController::class, 'getAllLocations']);
+
+    Route::get('/map/select_mark', [MapController::class, 'select_mark'])->name('map.select_mark');
+
+    
+    Route::get('/map/realtime', [MapController::class, 'realtime'])->name('map.realtime');
+
+
+
+
 
 });
 

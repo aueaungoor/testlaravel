@@ -25,17 +25,19 @@ class LoginController  extends Controller
         // 🔹 ใช้ Auth::attempt() เพื่อตรวจสอบข้อมูลล็อกอิน
         if (Auth::attempt($credentials)) {
             // 🔹 ล็อกอินสำเร็จ Redirect ไปที่หน้า companies.index\
-            if($selectedRole == 'chef')
-            {
-                return redirect()->route('chef.main')->with('success', 'Login Success');
-            }
-            else if($selectedRole == 'shop')
-            {
-                return redirect()->route('shop.main')->with('success', 'Login Success');
-            }
-            else{
-                return redirect()->route('companies.index')->with('success', 'Login Success');
-            }
+            // if($selectedRole == 'chef')
+            // {
+            //     return redirect()->route('chef.main')->with('success', 'Login Success');
+            // }
+            // else if($selectedRole == 'shop')
+            // {
+            //     return redirect()->route('shop.main')->with('success', 'Login Success');
+            // }
+            // else{
+            //     return redirect()->route('companies.index')->with('success', 'Login Success');
+            // }
+
+            return redirect()->route('companies.index')->with('success', 'Login Success');
            
         }
     
