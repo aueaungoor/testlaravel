@@ -20,120 +20,104 @@
     </div>
 
     <script>
-      let map;
+     let map;
 let marker;
+let currentLat = 14.028928; // ค่าเริ่มต้น (สามารถใช้ค่าจาก GPS แทนได้)
+let currentLng = 99.999274;
+let deviceName = localStorage.getItem("deviceName") || "อุปกรณ์ 1";
 
-function initMap(lat = 13.736717, lng = 100.523186) { // ✅ ใช้ค่าเริ่มต้นถ้าไม่มีค่าพิกัด
+function initMap(lat = currentLat, lng = currentLng) {
     console.log("✅ พิกัดที่ใช้ใน Google Maps:", lat, lng);
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            function (position) {
-                let lat = position.coords.latitude;
-                let lng = position.coords.longitude;
 
-                console.log("✅ พิกัด GPS ที่ได้รับ:", lat, lng);
+    let userPos = { lat: lat, lng: lng };
 
-                let userPos = { lat: lat, lng: lng };
-
-                map = new google.maps.Map(document.getElementById("map"), {
-                    center: userPos,
-                    zoom: 15
-                });
-
-                marker = new google.maps.Marker({
-                    position: userPos,
-                    map: map,
-                    draggable: true
-                });
-
-                updateLatLng(marker.getPosition());
-
-                marker.addListener("dragend", function () {
-                    updateLatLng(marker.getPosition());
-                });
-            },
-            function (error) {
-                console.error("❌ เกิดข้อผิดพลาดในการดึงพิกัด:", error.message);
-                alert("ไม่สามารถเข้าถึงตำแหน่งของคุณได้: " + error.message);
-                loadDefaultMap();
-            },
-            { enableHighAccuracy: true }
-        );
-    } else {
-        alert("เบราว์เซอร์ของคุณไม่รองรับการระบุตำแหน่ง");
-        loadDefaultMap();
-    }
-
-
-
-    var map = new google.maps.Map(document.getElementById("map"), {
-        center: { lat: lat, lng: lng },
+    map = new google.maps.Map(document.getElementById("map"), {
+        center: userPos,
         zoom: 15
     });
 
-    var marker = new google.maps.Marker({
-        position: { lat: lat, lng: lng },
+    marker = new google.maps.Marker({
+        position: userPos,
         map: map,
-        title: "ตำแหน่งของคุณ"
+        draggable: true
     });
 
-    console.log("📌 พิกัดที่ได้จาก Google Maps:", marker.getPosition());
+    marker.addListener("dragend", function () {
+        let newPos = marker.getPosition();
+        updateLatLng(newPos.lat(), newPos.lng(), deviceName);
+    });
 
+    // ✅ เรียก `simulateMovement()` ให้เริ่มจำลองการเคลื่อนที่
+    simulateMovement();
+}
 
-            // ส่งข้อมูลไปที่ Laravel
-            fetch('/api/map/realtimee', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ latitude: lat, longitude: lng })
-            })
-            .then(response => response.json())
-            .then(data => console.log("📡 ส่งพิกัดสำเร็จ", data))
-            .catch(error => console.error("❌ ส่งพิกัดล้มเหลว", error));
-        }
+function updateLatLng(lat, lng, deviceName) {
+    console.log("📌 พิกัดอัปเดต:", lat, lng, "อุปกรณ์:", deviceName);
 
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        var lat = position.coords.latitude;
-                        var lng = position.coords.longitude;
-                        initMap(lat, lng);
-                    },
-                    (error) => {
-                        alert("ไม่สามารถเข้าถึงตำแหน่งของคุณได้: " + error.message);
-                    }
-                );
-            } else {
-                alert("เบราว์เซอร์ของคุณไม่รองรับ Geolocation");
-            }
-        }
-
-
-        function updateLatLng(position) {
-    if (!position) {
-        console.error("❌ ไม่สามารถอัปเดตพิกัด: position เป็น undefined");
-        return;
-    }
-
-    let lat = position.lat();
-    let lng = position.lng();
-
-    console.log("📌 พิกัด Marker อัปเดต:", lat, lng);
-
-    // เช็คว่า element มีอยู่จริงก่อนที่จะอัปเดตค่า
     let latElement = document.getElementById("latDisplay");
     let lngElement = document.getElementById("lngDisplay");
 
     if (latElement && lngElement) {
         latElement.textContent = lat.toFixed(6);
         lngElement.textContent = lng.toFixed(6);
+    }
+
+    // ✅ อัปเดต Marker บนแผนที่
+    let newPosition = { lat: lat, lng: lng };
+    marker.setPosition(newPosition);
+    map.setCenter(newPosition);
+
+    // ✅ ส่งพิกัดไปที่ Backend
+    fetch('/api/map/realtimee', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            deviceName: deviceName,
+            latitude: lat,
+            longitude: lng
+        })
+    })
+    .then(response => response.json())
+    .then(data => console.log("📡 ส่งพิกัดสำเร็จ", data))
+    .catch(error => console.error("❌ ส่งพิกัดล้มเหลว", error));
+}
+
+// ✅ ฟังก์ชันจำลองการเคลื่อนที่ (GPS Movement Simulation)
+function simulateMovement() {
+    setInterval(() => {
+        // 🔄 เปลี่ยนค่าพิกัดทีละนิด (จำลองการขยับ)
+        currentLat += (Math.random() - 0.5) * 0.0002; // ขยับไปทางเหนือ/ใต้
+        currentLng += (Math.random() - 0.5) * 0.0002; // ขยับไปทางซ้าย/ขวา
+
+        updateLatLng(currentLat, currentLng, deviceName);
+    }, 500);  // ⏳ อัปเดตทุก 500 มิลลิวินาที
+}
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                currentLat = position.coords.latitude;
+                currentLng = position.coords.longitude;
+                console.log("📍 พิกัด GPS:", currentLat, currentLng);
+                initMap(currentLat, currentLng);
+            },
+            (error) => {
+                console.error("❌ เกิดข้อผิดพลาดในการดึงพิกัด:", error.message);
+                alert("ไม่สามารถเข้าถึงตำแหน่งของคุณได้: " + error.message);
+                initMap();  // โหลดค่าเริ่มต้นถ้า GPS ใช้ไม่ได้
+            },
+            { enableHighAccuracy: true }
+        );
     } else {
-        console.warn("⚠️ ไม่พบ element สำหรับแสดงค่าพิกัด!");
+        alert("เบราว์เซอร์ของคุณไม่รองรับ Geolocation");
+        initMap();
     }
 }
 
+window.onload = function () {
+    getLocation();
+};
 
     </script>
      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB38ClEA6wcIw-6PEomjW297jb7Rx9GNo4&callback=initMap" async defer></script>
