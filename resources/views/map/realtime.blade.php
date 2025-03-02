@@ -8,7 +8,7 @@
 </head>
 <body>
     <h2>ตำแหน่งของคุณ</h2>
-    <button onclick="getLocation()">📍 แชร์ตำแหน่ง</button>
+    <!-- <button onclick="getLocation()">📍 แชร์ตำแหน่ง</button> -->
     <div id="map" style="width: 100%; height: 500px;"></div>
 
     <div class="mb-2">
@@ -130,7 +130,7 @@ function trackLiveLocation() {
                 console.error("❌ ไม่สามารถดึงตำแหน่งได้:", error.message);
                 alert("เกิดข้อผิดพลาดในการดึงตำแหน่ง: " + error.message);
             },
-            { enableHighAccuracy: true, maximumAge: 1000, timeout: 10000 }
+            { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
         );
     } else {
         alert("เบราว์เซอร์ของคุณไม่รองรับ Geolocation");
