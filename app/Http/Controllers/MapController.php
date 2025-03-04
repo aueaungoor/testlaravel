@@ -108,6 +108,13 @@ public function realtimee(Request $request)
         ]);
     }
 
+    public function  addshop()
+{
+    return view('map.addshop' );
+}
+}
+  
+
 
 
 
@@ -119,7 +126,7 @@ public function realtimee(Request $request)
 
 
     
-}
+
 
 
 

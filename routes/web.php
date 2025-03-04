@@ -78,6 +78,8 @@ Route::middleware(['auth'])->group(function () {
     
     Route::get('/map/realtime', [MapController::class, 'realtime'])->name('map.realtime');
 
+    Route::get('/map/addshop', [MapController::class, 'addshop'])->name('map.addshop');
+
 
 
 

@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Maps & GPS</title>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
    
 </head>
 <body>
+    <a href="{{ route('map.show') }}" class="btn btn-success">Show All</a>
+
     <h2>ตำแหน่งของคุณ</h2>
     <!-- <button onclick="getLocation()">📍 แชร์ตำแหน่ง</button> -->
     <div id="map" style="width: 100%; height: 500px;"></div>
@@ -130,7 +133,7 @@ function trackLiveLocation() {
                 console.error("❌ ไม่สามารถดึงตำแหน่งได้:", error.message);
                 alert("เกิดข้อผิดพลาดในการดึงตำแหน่ง: " + error.message);
             },
-            { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
+            { enableHighAccuracy: true, maximumAge:10000  , timeout: 10000 }
         );
     } else {
         alert("เบราว์เซอร์ของคุณไม่รองรับ Geolocation");

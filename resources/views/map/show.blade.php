@@ -71,6 +71,7 @@
             <a href="{{ route('map.index')}}" class="btn btn-success">Back to add more location</a>
              <a href="{{ route('map.pagesall')}}" class="btn btn-success">See All Mark</a>
              <a href="{{ route('map.realtime')}}" class="btn btn-success">Goodle Realtime</a>
+             <a href="{{ route('map.addshop')}}" class="btn btn-success">add Shop</a>
         </div>
 
         <table class="table table-bordered">

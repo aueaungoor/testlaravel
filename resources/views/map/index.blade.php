@@ -92,7 +92,7 @@
                 zoom: 15
             });
 
-            marker = new google.maps.Marker({
+            marker = new google.maps.marker.AdvancedMarkerElement({
                 position: defaultPos,
                 map: map,
                 draggable: true
@@ -149,7 +149,9 @@
          
 
     </script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB38ClEA6wcIw-6PEomjW297jb7Rx9GNo4&callback=initMap" async defer></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB38ClEA6wcIw-6PEomjW297jb7Rx9GNo4&callback=initMap&libraries=marker"></script>
+
+        {{-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB38ClEA6wcIw-6PEomjW297jb7Rx9GNo4&callback=initMap"></script> --}}
 
 </body>
 </html>
